@@ -1,0 +1,28 @@
+{
+  "name": "los-jimenez-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sitio web y pedidos en línea de Los Jiménez, cocina económica.",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --test tests/pricing.test.mjs tests/validation.test.mjs tests/orders.test.mjs",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@lucide/astro": "^1.68.0",
+    "@tailwindcss/vite": "^4.3.4",
+    "astro": "^7.4.5",
+    "tailwindcss": "^4.3.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3"
+  }
+}

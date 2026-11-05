@@ -1,0 +1,239 @@
+---
+import {
+  ArrowRight,
+  Camera,
+  Check,
+  Clock,
+  Flame,
+  MapPin,
+  MessageCircle,
+  ShieldCheck,
+  Truck,
+  UtensilsCrossed,
+} from '@lucide/astro';
+import { business } from '../../config/business';
+import { formatMXN } from '../../lib/pricing';
+import { buildWhatsAppUrl } from '../../lib/whatsapp';
+
+const helpUrl = buildWhatsAppUrl(
+  business.whatsapp.number,
+  'Hola, quiero saber si todavía hay platillos disponibles hoy.',
+);
+
+const nameParts = business.dish.name.split(business.dish.nameAccent);
+const hasAccent = business.dish.name.includes(business.dish.nameAccent);
+const dishNameBefore = hasAccent ? (nameParts[0] ?? '') : business.dish.name;
+const dishNameAfter = hasAccent ? nameParts.slice(1).join(business.dish.nameAccent) : '';
+---
+
+<section data-step-panel="1" aria-labelledby="dish-title" class="wizard-panel">
+  <div class="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-14">
+    <div class="order-2 lg:order-1">
+      <span class="eyebrow">
+        <UtensilsCrossed class="size-4" aria-hidden="true" />
+        Platillo del día
+      </span>
+
+      <div class="mt-4 flex flex-wrap gap-2">
+        {
+          business.dish.tags.map((tag, index) => (
+            <span
+              class:list={[
+                'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em]',
+                index === 0
+                  ? 'bg-brand-soft/60 text-brand-dark'
+                  : 'border border-line bg-paper/70 text-ink-muted',
+              ]}
+            >
+              {index === 0 && <Flame class="size-3" aria-hidden="true" />}
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+
+      <h1
+        id="dish-title"
+        data-step-heading
+        tabindex="-1"
+        class="mt-5 font-display text-[2.9rem] font-semibold leading-[0.96] tracking-[-0.03em] text-ink sm:text-6xl xl:text-[4.4rem]"
+      >
+        {dishNameBefore}{hasAccent && <em class="italic text-brand">{business.dish.nameAccent}</em>}{dishNameAfter}
+      </h1>
+
+      <p class="mt-5 max-w-xl text-sm leading-relaxed text-ink-muted sm:text-base">
+        {business.dish.description}
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-end gap-x-3 gap-y-1">
+        <p class="font-display text-4xl font-semibold leading-none text-ink">
+          {formatMXN(business.pricing.unitPrice)}
+        </p>
+        <p class="pb-1 text-xs font-medium text-ink-muted">MXN por platillo</p>
+        <span class="mb-1 ml-1 rounded-full bg-gold/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-olive-dark">
+          Envío {formatMXN(business.pricing.shippingFee)} por pedido
+        </span>
+      </div>
+
+      <ul class="mt-7 grid max-w-xl gap-2.5 sm:grid-cols-2" aria-label="Qué incluye tu platillo">
+        {
+          business.dish.includes.map((item) => (
+            <li class="flex items-start gap-2 text-sm text-ink/85">
+              <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-olive/10 text-olive">
+                <Check class="size-3" aria-hidden="true" />
+              </span>
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-7 grid max-w-xl gap-3 rounded-2xl border border-line/80 bg-paper/55 p-4 sm:grid-cols-2">
+        <p class="flex items-center gap-2 text-xs text-ink-muted">
+          <Truck class="size-4 shrink-0 text-brand" aria-hidden="true" />
+          Envío {formatMXN(business.pricing.shippingFee)} por pedido
+        </p>
+        <p class="flex items-center gap-2 text-xs text-ink-muted">
+          <MapPin class="size-4 shrink-0 text-brand" aria-hidden="true" />
+          Servicio en {business.brand.city}
+        </p>
+        <p class="flex items-center gap-2 text-xs text-ink-muted">
+          <Clock class="size-4 shrink-0 text-brand" aria-hidden="true" />
+          {business.hours.summary}
+        </p>
+        <p class="flex items-center gap-2 text-xs text-ink-muted">
+          <ShieldCheck class="size-4 shrink-0 text-brand" aria-hidden="true" />
+          Efectivo o transferencia
+        </p>
+      </div>
+
+      <div data-dish-actions class="mt-7 hidden lg:block">
+        <button type="button" data-primary class="btn-primary w-full sm:w-auto">
+          ¿Cuántos quieres?
+          <ArrowRight class="size-4" aria-hidden="true" />
+        </button>
+        <p class="mt-3 text-[11px] leading-relaxed text-ink-muted">
+          Preparamos cada pedido al momento. La disponibilidad se confirma al finalizar.
+        </p>
+      </div>
+
+      <div
+        data-dish-soldout
+        hidden
+        class="mt-7 rounded-2xl border border-brand/25 bg-brand-soft/35 p-5"
+        role="status"
+      >
+        <p class="font-display text-xl font-semibold text-ink">Hoy ya no quedan platillos</p>
+        <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">
+          Se agotó el platillo del día. Escríbenos si quieres que te avisemos del siguiente.
+        </p>
+        {
+          helpUrl && (
+            <a
+              href={helpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/15 bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-ink/30"
+            >
+              <MessageCircle class="size-4 text-brand" aria-hidden="true" />
+              Avisarme por WhatsApp
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="relative order-1 mx-auto w-full max-w-[440px] lg:order-2 lg:max-w-none">
+      <div
+        class="pointer-events-none absolute -right-4 -top-4 size-40 rounded-full bg-gold/25 blur-2xl"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div
+        class="dish-photo relative overflow-hidden rounded-[2rem] border-[6px] border-paper bg-cream-deep shadow-float"
+      >
+        <img
+          data-dish-image
+          src={business.dish.image}
+          alt={business.dish.imageAlt}
+          width="1200"
+          height="1500"
+          fetchpriority="high"
+          decoding="async"
+          class="aspect-[4/5] max-h-[610px] w-full object-cover"
+        />
+
+        <div
+          data-dish-fallback
+          hidden
+          class="flex aspect-[4/5] max-h-[610px] w-full flex-col items-center justify-center bg-cream-deep px-8 text-center"
+        >
+          <span class="grid size-16 place-items-center rounded-full bg-paper text-brand">
+            <UtensilsCrossed class="size-7" aria-hidden="true" />
+          </span>
+          <p class="mt-4 font-display text-2xl font-semibold text-ink">Foto no disponible</p>
+          <p class="mt-2 max-w-xs text-sm leading-relaxed text-ink-muted">
+            El platillo de hoy sigue disponible. Puedes continuar con tu pedido.
+          </p>
+        </div>
+
+        <div
+          class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/35 via-transparent to-transparent"
+          aria-hidden="true"
+        >
+        </div>
+
+        <span
+          class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-paper/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand shadow-sm backdrop-blur sm:left-5 sm:top-5"
+        >
+          <span class="size-1.5 rounded-full bg-brand"></span>
+          Hoy
+        </span>
+
+        <span
+          data-dish-soldout-badge
+          hidden
+          class="absolute right-4 top-4 inline-flex items-center rounded-full bg-brand px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-md sm:right-5 sm:top-5"
+        >
+          Agotado hoy
+        </span>
+
+        <div
+          class="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-paper/95 py-1 pl-2 pr-3.5 shadow-lg backdrop-blur sm:bottom-5 sm:left-5"
+        >
+          <span class="grid size-7 shrink-0 place-items-center rounded-full bg-gold/25 text-olive-dark">
+            <Camera class="size-3.5" aria-hidden="true" />
+          </span>
+          <p class="text-xs font-semibold text-ink">Foto real</p>
+        </div>
+      </div>
+
+      <div
+        class="absolute -right-3 top-8 hidden rotate-6 rounded-full bg-gold px-4 py-4 text-center shadow-float sm:block"
+      >
+        <p class="font-display text-lg font-semibold leading-none text-olive-dark">100%</p>
+        <p class="mt-1 text-[8px] font-bold uppercase tracking-[0.14em] text-olive-dark">Casero</p>
+      </div>
+      <div
+        data-dish-actions
+        class="fixed inset-x-0 bottom-0 z-40 border-t border-line/80 bg-paper/95 px-5 py-3 backdrop-blur-md lg:hidden"
+        style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
+      >
+        <div class="mx-auto flex max-w-md items-center gap-3">
+          <div class="shrink-0">
+            <p class="text-[9px] font-semibold uppercase tracking-[0.16em] text-ink-muted">Hoy</p>
+            <p class="font-display text-xl font-semibold leading-none text-ink">
+              {formatMXN(business.pricing.unitPrice)}
+              <span class="font-sans text-[9px] font-medium text-ink-muted">+ envío</span>
+            </p>
+          </div>
+          <button type="button" data-primary class="btn-primary min-h-12 flex-1 !px-4">
+            ¿Cuántos quieres?
+            <ArrowRight class="size-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

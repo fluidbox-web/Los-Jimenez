@@ -1,0 +1,29 @@
+---
+import { ArrowRight } from '@lucide/astro';
+import { business } from '../../config/business';
+import { formatMXN } from '../../lib/pricing';
+import { calculateTotals } from '../../lib/pricing';
+
+const initialTotals = calculateTotals(1, business.pricing.unitPrice, business.pricing.shippingFee);
+---
+
+<div data-action-bar class="wizard-action-bar" hidden>
+  <div class="mx-auto flex w-full max-w-[1200px] items-center gap-3 px-5 py-3 sm:px-8 lg:px-5">
+    <div class="min-w-0 shrink-0">
+      <p class="text-[9px] font-semibold uppercase tracking-[0.16em] text-ink-muted">Total</p>
+      <p data-total class="font-display text-xl font-semibold leading-tight text-ink">
+        {formatMXN(initialTotals.total)}
+      </p>
+    </div>
+
+    <button
+      type="button"
+      data-primary
+      class="btn-primary min-h-12 min-w-0 flex-1 !px-4 text-[13px] sm:text-sm"
+    >
+      <span data-primary-spinner class="spinner" hidden aria-hidden="true"></span>
+      <span data-primary-label class="truncate">Continuar</span>
+      <ArrowRight data-primary-icon class="size-4 shrink-0" aria-hidden="true" />
+    </button>
+  </div>
+</div>

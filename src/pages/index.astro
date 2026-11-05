@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Progress from '../components/wizard/Progress.astro';
+import StepDish from '../components/wizard/StepDish.astro';
+import DishSummary from '../components/wizard/DishSummary.astro';
+import StepQuantity from '../components/wizard/StepQuantity.astro';
+import StepDelivery from '../components/wizard/StepDelivery.astro';
+import StepPayment from '../components/wizard/StepPayment.astro';
+import StepReview from '../components/wizard/StepReview.astro';
+import StepSuccess from '../components/wizard/StepSuccess.astro';
+import ActionBar from '../components/wizard/ActionBar.astro';
+import { business } from '../config/business';
+---
+
+<Layout
+  title={`${business.dish.name} · ${business.brand.name} ${business.brand.city}`}
+  description={`Pide el platillo del día en ${business.brand.city}. ${business.dish.description}`}
+>
+  <div data-wizard class="wizard-page">
+    <div class="container-page pt-6 sm:pt-9">
+      <Progress />
+
+      <noscript>
+        <div class="mb-6 rounded-2xl border border-brand/25 bg-brand-soft/35 p-4 text-sm leading-relaxed text-brand-dark">
+          Para completar tu pedido necesitas activar JavaScript en tu navegador.
+        </div>
+      </noscript>
+
+      <div data-wizard-stage>
+        <StepDish />
+
+        <div
+          data-order-shell
+          hidden
+          class="lg:grid lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-start lg:gap-9"
+        >
+          <DishSummary />
+
+          <div class="min-w-0">
+            <StepQuantity />
+            <StepDelivery />
+            <StepPayment />
+            <StepReview />
+            <ActionBar />
+          </div>
+        </div>
+
+        <StepSuccess />
+      </div>
+
+      <div
+        data-live-region
+        class="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { initWizard } from '../lib/wizard/controller';
+
+    initWizard();
+  </script>
+</Layout>

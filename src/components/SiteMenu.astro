@@ -1,0 +1,205 @@
+---
+import {
+  ArrowRight,
+  BookOpen,
+  CalendarDays,
+  ChevronRight,
+  Clock,
+  Images,
+  MapPin,
+  X,
+} from '@lucide/astro';
+import { business } from '../config/business';
+import BrandIcon from './icons/BrandIcon.astro';
+
+const pathname = Astro.url.pathname;
+
+const navItems = [
+  {
+    href: '/menu-semana',
+    label: 'Menú de la semana',
+    description: 'Lo que cocinamos cada día',
+    icon: CalendarDays,
+  },
+  {
+    href: '/galeria',
+    label: 'Galería',
+    description: 'La cocina y los platillos',
+    icon: Images,
+  },
+  {
+    href: '/blog',
+    label: 'Blog',
+    description: 'Historias, recetas y novedades',
+    icon: BookOpen,
+  },
+];
+
+const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+---
+
+<dialog
+  id="site-menu"
+  class="site-menu"
+  aria-labelledby="site-menu-title"
+  aria-modal="true"
+>
+  <div class="site-menu-panel">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h2 id="site-menu-title" class="font-display text-2xl font-semibold tracking-tight text-ink">
+          {business.brand.name}
+        </h2>
+        <p class="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-brand">
+          {business.brand.tagline}
+        </p>
+        <p class="mt-3 flex items-center gap-1.5 text-[11px] text-ink-muted">
+          <MapPin class="size-3.5 text-brand" aria-hidden="true" />
+          {business.brand.city}, {business.brand.state}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        data-menu-close
+        class="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line bg-paper text-ink transition hover:border-ink/25 hover:bg-white"
+      >
+        <X class="size-5" aria-hidden="true" />
+        <span class="sr-only">Cerrar menú</span>
+      </button>
+    </div>
+
+    <nav class="mt-8" aria-label="Menú principal">
+      <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-muted">Explora</p>
+      <ul class="mt-3 space-y-2">
+        {
+          navItems.map(({ href, label, description, icon: Icon }) => {
+            const active = isActive(href);
+
+            return (
+              <li>
+                <a
+                  href={href}
+                  aria-current={active ? 'page' : undefined}
+                  class={`group flex items-center gap-3 rounded-2xl border p-3 transition ${
+                    active
+                      ? 'border-brand/30 bg-brand-soft/30'
+                      : 'border-transparent hover:border-line hover:bg-paper/70'
+                  }`}
+                >
+                  <span
+                    class={`grid size-10 shrink-0 place-items-center rounded-full border ${
+                      active
+                        ? 'border-brand/30 bg-brand text-white'
+                        : 'border-line bg-paper text-brand'
+                    }`}
+                  >
+                    <Icon class="size-[18px]" aria-hidden="true" />
+                  </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-sm font-semibold text-ink">{label}</span>
+                    <span class="mt-0.5 block text-[11px] leading-snug text-ink-muted">
+                      {description}
+                    </span>
+                  </span>
+                  <ChevronRight
+                    class={`size-4 shrink-0 transition group-hover:translate-x-0.5 ${
+                      active ? 'text-brand' : 'text-ink-muted'
+                    }`}
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="mt-auto space-y-5 pt-8">
+      <div>
+        <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-muted">Síguenos</p>
+        <ul class="mt-3 flex items-center gap-2">
+          {
+            business.socials.map((social) => (
+              <li>
+                <a
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${social.label} de ${business.brand.name} (se abre en una nueva ventana)`}
+                  title={social.label}
+                  class="inline-flex size-11 items-center justify-center rounded-full border border-line bg-paper text-ink-muted transition hover:border-brand/40 hover:bg-brand-soft/40 hover:text-brand"
+                >
+                  <BrandIcon name={social.id} class="size-[18px]" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-line bg-paper/70 p-4">
+        <p class="flex items-center gap-2 text-[11px] text-ink-muted">
+          <Clock class="size-3.5 shrink-0 text-brand" aria-hidden="true" />
+          {business.hours.summary}
+        </p>
+        <a
+          href="/"
+          class="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand transition hover:text-brand-dark"
+        >
+          Pedir el platillo de hoy
+          <ArrowRight class="size-4" aria-hidden="true" />
+        </a>
+      </div>
+
+      {
+        business.demoMode && (
+          <p class="rounded-xl border border-gold/50 bg-gold/15 p-3 text-[11px] leading-relaxed text-olive-dark">
+            <span class="font-semibold">Demo:</span> {business.demoNotice}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('site-menu');
+
+  if (dialog instanceof HTMLDialogElement) {
+    const openers = document.querySelectorAll('[data-menu-open]');
+    const closeButton = dialog.querySelector('[data-menu-close]');
+    let lastOpener: HTMLElement | null = null;
+
+    const setExpanded = (value: boolean) => {
+      openers.forEach((button) => button.setAttribute('aria-expanded', String(value)));
+    };
+
+    const openMenu = (event: Event) => {
+      if (dialog.open) return;
+      lastOpener = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+      dialog.showModal();
+      document.documentElement.classList.add('menu-open');
+      setExpanded(true);
+      if (closeButton instanceof HTMLElement) closeButton.focus();
+    };
+
+    const closeMenu = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    openers.forEach((button) => button.addEventListener('click', openMenu));
+    closeButton?.addEventListener('click', closeMenu);
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) closeMenu();
+    });
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('menu-open');
+      setExpanded(false);
+      lastOpener?.focus();
+    });
+  }
+</script>

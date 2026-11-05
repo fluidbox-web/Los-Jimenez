@@ -1,0 +1,44 @@
+---
+import { business } from '../../config/business';
+import { formatMXN } from '../../lib/pricing';
+---
+
+<aside
+  class="hidden lg:sticky lg:top-8 lg:block lg:rounded-[1.75rem] lg:border lg:border-line/80 lg:bg-paper lg:p-4 lg:shadow-card"
+  aria-label="Resumen del platillo"
+>
+  <div class="relative w-16 shrink-0 overflow-hidden rounded-xl lg:w-full">
+    <img
+      src={business.dish.image}
+      alt=""
+      width="600"
+      height="450"
+      loading="lazy"
+      decoding="async"
+      class="size-16 object-cover lg:h-auto lg:w-full lg:aspect-[4/3]"
+    />
+    <span
+      class="absolute left-2 top-2 hidden rounded-full bg-paper/95 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-brand lg:block"
+    >
+      Hoy
+    </span>
+  </div>
+
+  <div class="min-w-0 flex-1 lg:mt-4">
+    <p class="text-[9px] font-semibold uppercase tracking-[0.18em] text-brand">Platillo del día</p>
+    <p class="mt-1 font-display text-[15px] font-semibold leading-tight text-ink lg:text-xl">
+      {business.dish.name}
+    </p>
+    <p class="mt-1 text-[11px] text-ink-muted">
+      <span data-summary-quantity>1</span>
+      <span data-summary-word>platillo</span>
+      <span class="mx-1.5 text-line">·</span>
+      {formatMXN(business.pricing.unitPrice)} c/u
+    </p>
+
+    <div class="mt-4 hidden border-t border-line/70 pt-3 text-[11px] leading-relaxed text-ink-muted lg:block">
+      <p>Envío {formatMXN(business.pricing.shippingFee)} por pedido</p>
+      <p class="mt-1">Servicio en {business.brand.city}</p>
+    </div>
+  </div>
+</aside>

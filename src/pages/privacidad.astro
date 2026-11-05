@@ -1,0 +1,114 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ArrowLeft, ShieldCheck } from '@lucide/astro';
+import { business } from '../config/business';
+---
+
+<Layout
+  title={`Aviso de privacidad · ${business.brand.name}`}
+  description="Aviso de privacidad de Los Jiménez, cocina del día en Playa del Carmen."
+>
+  <div class="container-page py-10 sm:py-14">
+    <a
+      href="/"
+      class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink-muted transition hover:text-ink"
+    >
+      <ArrowLeft class="size-4" aria-hidden="true" />
+      Volver al pedido
+    </a>
+
+    <article class="mx-auto mt-6 max-w-2xl rounded-[2rem] border border-line bg-paper p-6 shadow-card sm:p-9">
+      <span class="eyebrow">
+        <ShieldCheck class="size-4" aria-hidden="true" />
+        Información legal
+      </span>
+      <h1 class="mt-4 font-display text-4xl font-semibold leading-tight tracking-tight text-ink sm:text-5xl">
+        Aviso de <em class="italic text-brand">privacidad</em>
+      </h1>
+      <p class="mt-3 text-xs text-ink-muted">Última actualización: noviembre de 2026.</p>
+
+      {
+        business.demoMode && (
+          <div class="mt-6 rounded-2xl border border-gold/50 bg-gold/15 p-4 text-xs leading-relaxed text-olive-dark">
+            <p class="font-semibold">Documento de demostración</p>
+            <p class="mt-1">
+              Este texto es una plantilla de ejemplo. Antes de publicar el sitio, debe revisarse y
+              adaptarse a los datos reales del negocio y a la legislación aplicable.
+            </p>
+          </div>
+        )
+      }
+
+      <div class="mt-7 space-y-6 text-sm leading-relaxed text-ink-muted">
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Quién trata tus datos</h2>
+          <p class="mt-2">
+            {business.brand.name}, con operación en {business.brand.city}, {business.brand.state},
+            es responsable del tratamiento de los datos personales que compartes para realizar tu
+            pedido.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Datos que recabamos</h2>
+          <p class="mt-2">
+            Recabamos tu nombre (opcional), número de WhatsApp, colonia, calle y número, datos de
+            ubicación complementarios, referencias y el detalle de tu pedido. No solicitamos datos
+            bancarios ni de tarjetas desde este sitio.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Para qué los usamos</h2>
+          <p class="mt-2">
+            Usamos tus datos únicamente para preparar, coordinar y entregar tu pedido, confirmar
+            disponibilidad y comunicarnos contigo por WhatsApp sobre el estado de tu compra. Si
+            autorizas expresamente el envío de promociones, también podremos usarlos para enviarte
+            novedades; esa autorización es opcional y puedes omitirla.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Direcciones guardadas</h2>
+          <p class="mt-2">
+            Si marcas la opción “Guardar esta dirección en este dispositivo” al completar un
+            pedido, guardaremos en el almacenamiento local de tu navegador tu nombre, número de
+            WhatsApp, colonia, calle, datos de ubicación y referencias. Esa información permanece
+            en tu dispositivo y no se envía a nuestros servidores por ese medio.
+          </p>
+          <p class="mt-2">
+            Puedes eliminarla cuando quieras con el botón “Olvidar” del paso de entrega o borrando
+            los datos de este sitio en tu navegador. Las direcciones nuevas solo se guardan cuando
+            tú lo autorizas y completas el pedido.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Conservación y terceros</h2>
+          <p class="mt-2">
+            Conservamos la información durante el tiempo necesario para atender el pedido y cumplir
+            obligaciones aplicables. No vendemos tus datos. Podemos compartir la información
+            estrictamente necesaria con la persona que realiza la entrega.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Tus derechos</h2>
+          <p class="mt-2">
+            Puedes solicitar el acceso, rectificación, cancelación u oposición al tratamiento de tus
+            datos escribiéndonos por WhatsApp al {business.whatsapp.display}. También puedes solicitar
+            que eliminemos los datos de un pedido cuando ya no sea necesario conservarlos.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="font-display text-xl font-semibold text-ink">Contacto</h2>
+          <p class="mt-2">
+            Para cualquier duda sobre este aviso, escríbenos por WhatsApp al
+            <strong class="font-semibold text-ink"> {business.whatsapp.display}</strong>.
+          </p>
+        </section>
+      </div>
+    </article>
+  </div>
+</Layout>

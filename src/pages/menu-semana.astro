@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import {
+  ArrowRight,
+  CalendarDays,
+  Check,
+  Clock,
+  UtensilsCrossed,
+} from '@lucide/astro';
+import DemoNotice from '../components/DemoNotice.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Layout from '../layouts/Layout.astro';
+import cochinita from '../assets/galeria/cochinita.jpg';
+import { business } from '../config/business';
+import { formatMXN } from '../lib/pricing';
+
+const { days, todayId, intro, note } = business.weeklyMenu;
+const today = days.find((day) => day.id === todayId) ?? days[0];
+const restOfWeek = days.filter((day) => day.id !== today.id);
+---
+
+<Layout
+  title={`Menú de la semana · ${business.brand.name}`}
+  description={`Conoce el menú de la semana de ${business.brand.name} en ${business.brand.city}. Cocina casera, un platillo distinto cada día.`}
+>
+  <PageHeader
+    eyebrow="Menú de la semana"
+    title="Cada día, algo casero"
+    accent="casero"
+    description={intro}
+  >
+    <CalendarDays slot="icon" class="size-4" aria-hidden="true" />
+  </PageHeader>
+
+  <section class="container-page pb-14 sm:pb-20">
+    <DemoNotice class="mt-7" message={note} />
+
+    <article
+      class="mt-8 overflow-hidden rounded-[2rem] border border-line bg-paper shadow-card lg:grid lg:grid-cols-[1.02fr_0.98fr]"
+      aria-labelledby="today-title"
+    >
+      <div class="relative min-h-[280px] overflow-hidden bg-cream-deep sm:min-h-[340px]">
+        <Image
+          src={cochinita}
+          alt={business.dish.imageAlt}
+          width={1200}
+          height={1500}
+          format="webp"
+          quality={88}
+          loading="eager"
+          decoding="async"
+          class="h-full w-full object-cover"
+        />
+        <span
+          class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-paper/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand shadow-sm backdrop-blur sm:left-5 sm:top-5"
+        >
+          <span class="size-1.5 rounded-full bg-brand"></span>
+          Hoy · {today.label}
+        </span>
+      </div>
+
+      <div class="flex flex-col justify-center p-6 sm:p-9">
+        <span class="eyebrow">
+          <UtensilsCrossed class="size-4" aria-hidden="true" />
+          Platillo de hoy
+        </span>
+        <h2
+          id="today-title"
+          class="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl"
+        >
+          {business.dish.name}
+        </h2>
+        <p class="mt-3 text-sm leading-relaxed text-ink-muted">{business.dish.description}</p>
+
+        <ul class="mt-5 grid gap-2 sm:grid-cols-2" aria-label="Qué incluye el platillo de hoy">
+          {
+            business.dish.includes.map((item) => (
+              <li class="flex items-start gap-2 text-sm text-ink/85">
+                <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-olive/10 text-olive">
+                  <Check class="size-3" aria-hidden="true" />
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="font-display text-3xl font-semibold leading-none text-ink">
+              {formatMXN(business.pricing.unitPrice)}
+              <span class="ml-1 font-sans text-xs font-medium text-ink-muted">MXN</span>
+            </p>
+            <p class="mt-1.5 text-[11px] text-ink-muted">
+              Envío {formatMXN(business.pricing.shippingFee)} por pedido
+            </p>
+          </div>
+          <a href="/" class="btn-primary">
+            Pedir el platillo de hoy
+            <ArrowRight class="size-4" aria-hidden="true" />
+          </a>
+        </div>
+
+        <p class="mt-4 flex items-center gap-2 border-t border-line/70 pt-4 text-[11px] text-ink-muted">
+          <Clock class="size-3.5 shrink-0 text-brand" aria-hidden="true" />
+          {business.hours.summary}
+        </p>
+      </div>
+    </article>
+
+    <div class="mt-12 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <span class="eyebrow">
+          <CalendarDays class="size-4" aria-hidden="true" />
+          La semana
+        </span>
+        <h2 class="mt-2 font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+          El resto de la semana
+        </h2>
+      </div>
+      <p class="text-xs text-ink-muted">
+        Precio por platillo: {formatMXN(business.pricing.unitPrice)} + envío
+      </p>
+    </div>
+
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        restOfWeek.map((day) => (
+          <article class="flex flex-col rounded-2xl border border-line bg-paper/80 p-5 transition hover:border-ink/20">
+            <div class="flex items-start justify-between gap-3">
+              <span class="rounded-full bg-cream px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-ink-muted">
+                {day.label}
+              </span>
+              <span class="rounded-full border border-line bg-paper px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-brand">
+                {day.tag}
+              </span>
+            </div>
+            <h3 class="mt-4 font-display text-xl font-semibold leading-tight text-ink">
+              {day.dish}
+            </h3>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">{day.description}</p>
+            <p class="mt-4 flex items-center gap-2 border-t border-line/70 pt-3 text-[11px] text-ink-muted">
+              <Clock class="size-3.5 shrink-0 text-brand" aria-hidden="true" />
+              Pedidos de 1:00 a 5:00 pm
+            </p>
+          </article>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-10 overflow-hidden rounded-[2rem] bg-olive px-6 py-8 text-cream shadow-card sm:px-9 sm:py-10"
+    >
+      <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+        <div class="max-w-xl">
+          <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-gold">Hoy se cocina</p>
+          <h2 class="mt-2 font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+            {today.dish}
+          </h2>
+          <p class="mt-2 text-sm leading-relaxed text-cream/75">
+            Haz tu pedido y recíbelo caliente en casa. También puedes escribirnos por WhatsApp si
+            tienes alguna duda.
+          </p>
+        </div>
+        <a
+          href="/"
+          class="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-olive-dark transition hover:-translate-y-0.5 hover:bg-white"
+        >
+          Pedir hoy
+          <ArrowRight class="size-4" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

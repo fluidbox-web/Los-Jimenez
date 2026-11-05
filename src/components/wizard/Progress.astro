@@ -1,0 +1,33 @@
+---
+const steps = ['Platillo', 'Cantidad', 'Entrega', 'Pago', 'Resumen'];
+---
+
+<div data-progress data-wizard-top class="mb-8 sm:mb-10">
+  <div class="flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <p class="font-display text-lg font-semibold text-ink sm:text-xl">
+        <span data-step-number>1</span> de 5 ·
+        <span class="italic text-brand" data-step-name>Platillo</span>
+      </p>
+    </div>
+    <p class="hidden text-[11px] text-ink-muted sm:block">Playa del Carmen · Entrega a domicilio</p>
+  </div>
+
+  <ol class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2" aria-label="Progreso del pedido">
+    {
+      steps.map((label, index) => (
+        <li
+          data-progress-item={index + 1}
+          data-state={index === 0 ? 'current' : 'upcoming'}
+          aria-current={index === 0 ? 'step' : undefined}
+        >
+          <span class="progress-segment block" aria-hidden="true" />
+          <span class="mt-2 hidden text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-muted sm:block" aria-hidden="true">
+            {label}
+          </span>
+          <span class="sr-only">{label}</span>
+        </li>
+      ))
+    }
+  </ol>
+</div>

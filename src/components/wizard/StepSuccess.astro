@@ -1,0 +1,157 @@
+---
+import { CircleCheck, MessageCircle, ReceiptText, Sparkles } from '@lucide/astro';
+import { business } from '../../config/business';
+import { calculateTotals, formatMXN } from '../../lib/pricing';
+
+const initialTotals = calculateTotals(
+  1,
+  business.pricing.unitPrice,
+  business.pricing.shippingFee,
+);
+---
+
+<section
+  data-step-panel="6"
+  hidden
+  aria-labelledby="success-title"
+  class="wizard-panel"
+>
+  <div class="mx-auto max-w-2xl">
+    <div class="rounded-[2rem] border border-line bg-paper p-5 shadow-float sm:p-8">
+      <div class="flex items-start gap-4">
+        <span class="grid size-14 shrink-0 place-items-center rounded-full bg-success/10 text-success">
+          <CircleCheck class="size-8" aria-hidden="true" />
+        </span>
+        <div>
+          <p data-success-kicker class="eyebrow">Pedido registrado</p>
+          <h2
+            id="success-title"
+            data-success-title
+            data-step-heading
+            tabindex="-1"
+            class="mt-2 font-display text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl"
+          >
+            Pedido recibido
+          </h2>
+          <p data-success-subtitle class="mt-2 text-sm leading-relaxed text-ink-muted">
+            Gracias. Ya tenemos tu pedido.
+          </p>
+        </div>
+      </div>
+
+      <div
+        data-demo-banner
+        hidden
+        class="mt-5 rounded-2xl border border-gold/50 bg-gold/15 p-4 text-xs leading-relaxed text-olive-dark"
+      >
+        <p class="font-semibold">Aviso de demostración</p>
+        <p class="mt-1">
+          Este pedido de prueba no fue enviado a la cocina ni a un CRM. Cuando conectemos el sistema
+          real, aquí verás la confirmación verdadera.
+        </p>
+      </div>
+
+      <div class="mt-5 grid gap-3 sm:grid-cols-2">
+        <div class="rounded-2xl bg-cream/70 px-4 py-3">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-muted">Folio</p>
+          <p data-success-folio class="mt-1 font-display text-lg font-semibold text-ink">—</p>
+        </div>
+        <div class="rounded-2xl bg-cream/70 px-4 py-3">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-muted">Estado</p>
+          <p data-success-status class="mt-1 text-sm font-semibold text-ink">—</p>
+        </div>
+      </div>
+
+      <div class="mt-5 flex items-center gap-2 border-t border-line/70 pt-5">
+        <ReceiptText class="size-4 text-brand" aria-hidden="true" />
+        <h3 class="font-display text-lg font-semibold text-ink">Tu pedido</h3>
+      </div>
+
+      <dl class="mt-3 space-y-2 text-sm">
+        <div class="summary-row">
+          <dt class="text-ink-muted">Platillo</dt>
+          <dd class="text-right font-medium text-ink">{business.dish.name}</dd>
+        </div>
+        <div class="summary-row">
+          <dt class="text-ink-muted">Cantidad</dt>
+          <dd class="font-semibold text-ink"><span data-success-quantity>1</span></dd>
+        </div>
+        <div class="summary-row">
+          <dt class="text-ink-muted">Teléfono</dt>
+          <dd class="text-ink"><span data-success-phone></span></dd>
+        </div>
+        <div class="summary-row">
+          <dt class="text-ink-muted">Entrega</dt>
+          <dd class="max-w-[65%] text-right leading-relaxed text-ink">
+            <span data-success-address></span>
+            <span data-success-schedule class="mt-0.5 block text-[11px] text-ink-muted"></span>
+          </dd>
+        </div>
+        <div data-success-references-row class="summary-row" hidden>
+          <dt class="text-ink-muted">Referencias</dt>
+          <dd data-success-references class="max-w-[65%] text-right leading-relaxed text-ink"></dd>
+        </div>
+        <div class="summary-row">
+          <dt class="text-ink-muted">Pago</dt>
+          <dd class="text-right text-ink">
+            <span data-success-payment></span>
+            <span data-success-cash class="mt-0.5 block text-[11px] text-ink-muted"></span>
+          </dd>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 border-t border-line pt-3">
+          <dt class="font-display text-lg font-semibold text-ink">Total</dt>
+          <dd data-success-total class="font-display text-2xl font-semibold text-ink">
+            {formatMXN(initialTotals.total)}
+          </dd>
+        </div>
+      </dl>
+
+      <div data-bank-card hidden class="mt-5 rounded-2xl border border-line bg-cream/60 p-4">
+        <p class="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-brand">
+          <Sparkles class="size-3.5" aria-hidden="true" />
+          Transferencia
+        </p>
+        <h3 class="mt-1 font-display text-lg font-semibold text-ink">Datos para transferir</h3>
+        <p class="mt-2 text-xs leading-relaxed text-ink-muted">
+          Importe exacto:{' '}
+          <strong data-bank-amount class="font-semibold text-ink"></strong>
+        </p>
+
+        <div data-bank-details hidden class="mt-3 space-y-1.5 text-xs text-ink-muted">
+          <p>Banco: <strong data-bank-name class="font-semibold text-ink"></strong></p>
+          <p>Titular: <strong data-bank-holder class="font-semibold text-ink"></strong></p>
+          <p>CLABE: <strong data-bank-clabe class="font-semibold text-ink"></strong></p>
+          <p>Referencia: <strong data-bank-reference class="font-semibold text-ink"></strong></p>
+        </div>
+
+        <p data-bank-missing hidden class="mt-2 text-xs leading-relaxed text-ink-muted">
+          Los datos bancarios aún no están configurados. Continúa por WhatsApp para coordinarlos.
+        </p>
+      </div>
+
+      <a
+        data-whatsapp-button
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary mt-6 w-full"
+        hidden
+      >
+        <MessageCircle class="size-4" aria-hidden="true" />
+        Continuar por WhatsApp
+      </a>
+      <p data-whatsapp-note class="mt-3 text-center text-[11px] leading-relaxed text-ink-muted">
+        Para iniciar la conversación, toca enviar en WhatsApp.
+      </p>
+      <p class="mt-1 text-center text-[11px] leading-relaxed text-ink-muted">
+        Abrir WhatsApp no significa que el mensaje ya fue enviado ni crea un segundo pedido.
+      </p>
+
+      <div class="mt-6 border-t border-line/70 pt-4 text-center">
+        <a href="/" class="inline-flex min-h-11 items-center justify-center text-xs font-semibold text-ink-muted transition hover:text-ink">
+          Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

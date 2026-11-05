@@ -1,0 +1,30 @@
+---
+import { Sparkles } from '@lucide/astro';
+import { business } from '../config/business';
+
+interface Props {
+  title?: string;
+  message: string;
+  class?: string;
+}
+
+const {
+  title = 'Contenido de demostración',
+  message,
+  class: className,
+} = Astro.props;
+---
+
+{
+  business.demoMode && (
+    <div
+      class={`rounded-2xl border border-gold/50 bg-gold/15 p-4 text-xs leading-relaxed text-olive-dark ${className ?? ''}`}
+    >
+      <p class="flex items-center gap-2 font-semibold">
+        <Sparkles class="size-3.5" aria-hidden="true" />
+        {title}
+      </p>
+      <p class="mt-1">{message}</p>
+    </div>
+  )
+}

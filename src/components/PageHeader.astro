@@ -1,0 +1,33 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  accent?: string;
+  description: string;
+}
+
+const { eyebrow, title, accent, description } = Astro.props;
+
+const parts = accent && title.includes(accent) ? title.split(accent) : null;
+const before = parts ? parts[0] : title;
+const after = parts ? parts.slice(1).join(accent ?? '') : '';
+---
+
+<section class="container-page pt-9 sm:pt-12">
+  <span class="eyebrow">
+    <slot name="icon" />
+    {eyebrow}
+  </span>
+
+  <h1
+    class="mt-4 max-w-3xl font-display text-[2.6rem] font-semibold leading-[0.98] tracking-[-0.03em] text-ink sm:text-5xl lg:text-6xl"
+  >
+    {before}{parts && <em class="italic text-brand">{accent}</em>}{after}
+  </h1>
+
+  <p class="mt-4 max-w-2xl text-sm leading-relaxed text-ink-muted sm:text-base">
+    {description}
+  </p>
+
+  <slot />
+</section>

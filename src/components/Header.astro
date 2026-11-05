@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import { Menu } from '@lucide/astro';
+import logo from '../assets/ljz-logo.png';
+import { business } from '../config/business';
+import { buildWhatsAppUrl } from '../lib/whatsapp';
+import BrandIcon from './icons/BrandIcon.astro';
+import SiteMenu from './SiteMenu.astro';
+
+const helpUrl = buildWhatsAppUrl(business.whatsapp.number, business.whatsapp.helpMessage);
+---
+
+<header class="border-b border-line/70 bg-cream/90">
+  <div
+    class="container-page grid h-16 grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-center sm:h-[72px]"
+  >
+    <button
+      type="button"
+      data-menu-open
+      aria-controls="site-menu"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      class="inline-flex size-11 items-center justify-center justify-self-start rounded-full border border-line bg-paper text-ink transition hover:border-ink/25 hover:bg-white"
+    >
+      <Menu class="size-5" aria-hidden="true" />
+      <span class="sr-only">Abrir menú</span>
+    </button>
+
+    <a
+      href="/"
+      class="inline-flex min-h-11 min-w-0 items-center justify-self-center"
+      aria-label={`${business.brand.name}, ir al inicio`}
+    >
+      <Image
+        src={logo}
+        alt={business.brand.name}
+        width={330}
+        height={110}
+        format="webp"
+        quality={90}
+        loading="eager"
+        decoding="async"
+        class="h-14 w-auto max-w-full sm:h-16"
+      />
+    </a>
+
+    {
+      helpUrl ? (
+        <a
+          href={helpUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Pedir ayuda por WhatsApp"
+          class="inline-flex size-11 items-center justify-center justify-self-end rounded-full border border-line bg-paper text-success transition hover:border-success/40 hover:bg-success/10"
+        >
+          <BrandIcon name="whatsapp" class="size-5" />
+          <span class="sr-only">Pedir ayuda por WhatsApp</span>
+        </a>
+      ) : (
+        <span aria-hidden="true" class="size-11 justify-self-end" />
+      )
+    }
+  </div>
+</header>
+
+<SiteMenu />
